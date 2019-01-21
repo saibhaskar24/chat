@@ -30,24 +30,33 @@ public class signup extends AppCompatActivity {
         setContentView(R.layout.activity_signup);
         mAuth = FirebaseAuth.getInstance();
         name=(EditText)findViewById(R.id.name);
-        e=(EditText)findViewById(R.id.email);
-        p=(EditText)findViewById(R.id.pass);
+        e=(EditText)findViewById(R.id.e);
+        p=(EditText)findViewById(R.id.p);
         cr = (Button)findViewById(R.id.cr);
     }
 
     public void cr(View view) {
 
+        String n = name.getText().toString();
         String email = e.getText().toString();
         String password = p.getText().toString();
-        Toast.makeText(this,"email : "+email+" pass :"+password,Toast.LENGTH_LONG).show();
-        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+        reg(n,email,password);
+    }
+
+    private void reg(String name, String email, String password) {
+        mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()) {
-                    FirebaseUser user = mAuth.getCurrentUser();
+                if(task.isSuccessful()) {
+                    Intent intent = new Intent(signup.this,MainActivity.class);
+                    Toast.makeText(signup.this,"sucess",Toast.LENGTH_LONG).show();
+                    startActivity(intent);
+                    finish();
+                }
+                else {
+                    Toast.makeText(signup.this, "Error", Toast.LENGTH_SHORT).show();
                 }
             }
         });
-
     }
 }
