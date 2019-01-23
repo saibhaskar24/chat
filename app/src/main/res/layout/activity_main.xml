@@ -7,9 +7,8 @@
     tools:context=".MainActivity">
 
     <include
-        android:id="@+id/app_bar_layout"
-        layout="@layout/app_main_toolbar"
-        android:visibility="visible" />
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
 
     <TextView
         android:layout_width="232dp"
