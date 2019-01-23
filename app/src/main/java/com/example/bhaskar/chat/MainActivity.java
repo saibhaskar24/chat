@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toolbar;
 
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -41,28 +42,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
         getMenuInflater().inflate(R.menu.main_menu, menu);
-
-        return super.onCreateOptionsMenu(menu);;
+        return true;
     }
 
-   /* @Override
+   @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        super.onOptionsItemSelected(item);
 
         if(item.getItemId() == R.id.logout) {
             FirebaseAuth.getInstance().signOut();
             change();
         }
         return true;
-    }*/
+    }
 
     private void change() {
-        Intent intent = new Intent(this,start.class);;
+        Intent intent = new Intent(this,start.class);
         startActivity(intent);
         finish();
     }
