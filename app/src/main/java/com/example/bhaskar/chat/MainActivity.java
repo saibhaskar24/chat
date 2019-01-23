@@ -5,8 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toolbar;
-
+import android.view.MenuInflater;
+import android.support.v7.widget.Toolbar;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -23,10 +23,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mAuth = FirebaseAuth.getInstance();
-        mToolbar = (Toolbar) findViewById(R.id.app_bar_layout);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setTitle("chat me");
         setActionBar(mToolbar);
-        getSupportActionBar();
+        getSupportActionBar(mToolbar);
     }
 
 
