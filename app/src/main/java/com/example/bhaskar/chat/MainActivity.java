@@ -1,6 +1,8 @@
 package com.example.bhaskar.chat;
 
 import android.content.Intent;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -18,7 +20,9 @@ import java.util.Objects;
 public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
-
+    ViewPager viewPager;
+    SectionPagerAdapter sectionPagerAdapter;
+    TabLayout tabLayout;
     Toolbar mToolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +33,12 @@ public class MainActivity extends AppCompatActivity {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setTitle("chat me");
         setSupportActionBar(mToolbar);
+
+        viewPager = (ViewPager) findViewById(R.id.tabPager);
+        sectionPagerAdapter = new SectionPagerAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(sectionPagerAdapter);
+        tabLayout = (TabLayout) findViewById(R.id.main_tabs);
+        tabLayout.setupWithViewPager(viewPager);
 
     }
 
