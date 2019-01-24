@@ -1,11 +1,14 @@
 package com.example.bhaskar.chat;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,6 +27,8 @@ public class signup extends AppCompatActivity {
     FirebaseAuth mAuth;
     EditText name,e,p;
     Button cr;
+    Toolbar mToolbar;
+    ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +38,17 @@ public class signup extends AppCompatActivity {
         e=(EditText)findViewById(R.id.e);
         p=(EditText)findViewById(R.id.p);
         cr = (Button)findViewById(R.id.cr);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setTitle("Create Account");
+
+        setSupportActionBar(mToolbar);
+
+        if(getSupportActionBar() != null) {
+            assert  getSupportActionBar() != null;
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
+        progressDialog = new ProgressDialog(this);
     }
 
     public void cr(View view) {
@@ -40,7 +56,14 @@ public class signup extends AppCompatActivity {
         String n = name.getText().toString();
         String email = e.getText().toString();
         String password = p.getText().toString();
-        reg(n,email,password);
+        if(!TextUtils.isEmpty(n) || !TextUtils.isEmpty(email) || !TextUtils.isEmpty(password)) {
+            progressDialog.setTitle("Restering user ");
+            progressDialog.setMessage("please wait");
+            progressDialog.setCanceledOnTouchOutside(false);
+            progressDialog.show();
+            reg(n,email,password);
+        }
+
     }
 
     private void reg(String name, String email, String password) {
@@ -48,12 +71,14 @@ public class signup extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()) {
+                    progressDialog.dismiss();
                     Intent intent = new Intent(signup.this,MainActivity.class);
                     Toast.makeText(signup.this,"sucess",Toast.LENGTH_LONG).show();
                     startActivity(intent);
                     finish();
                 }
                 else {
+                    progressDialog.hide();
                     Toast.makeText(signup.this, "Error", Toast.LENGTH_SHORT).show();
                 }
             }

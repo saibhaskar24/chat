@@ -7,6 +7,9 @@
     tools:context=".signup">
 
 
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
 
     <Button
         android:id="@+id/cr"
