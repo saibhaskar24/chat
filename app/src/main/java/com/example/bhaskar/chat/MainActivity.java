@@ -33,12 +33,11 @@ public class MainActivity extends AppCompatActivity {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setTitle("chat me");
         setSupportActionBar(mToolbar);
-
+        tabLayout = (TabLayout) findViewById(R.id.main_tabs);
         viewPager = (ViewPager) findViewById(R.id.tabPager);
         sectionPagerAdapter = new SectionPagerAdapter(getSupportFragmentManager());
-        viewPager.setAdapter(sectionPagerAdapter);
-        tabLayout = (TabLayout) findViewById(R.id.main_tabs);
         tabLayout.setupWithViewPager(viewPager);
+        viewPager.setAdapter(sectionPagerAdapter);
 
     }
 
@@ -67,6 +66,10 @@ public class MainActivity extends AppCompatActivity {
         if(item.getItemId() == R.id.logout) {
             FirebaseAuth.getInstance().signOut();
             change();
+        }
+        else if(item.getItemId() == R.id.menu_settings) {
+            Intent intent = new Intent(this,Settings.class);
+            startActivity(intent);
         }
         return true;
     }

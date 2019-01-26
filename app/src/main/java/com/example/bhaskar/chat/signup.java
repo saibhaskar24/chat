@@ -19,11 +19,15 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.HashMap;
 import java.util.Objects;
 
 public class signup extends AppCompatActivity {
 
+    DatabaseReference databaseReference;
     FirebaseAuth mAuth;
     EditText name,e,p;
     Button cr;
@@ -66,11 +70,19 @@ public class signup extends AppCompatActivity {
 
     }
 
-    private void reg(String name, String email, String password) {
+    private void reg(final String name, String email, String password) {
         mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()) {
+                    FirebaseUser current_user = FirebaseAuth.getInstance().getCurrentUser();
+                    databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(current_user.getUid());
+                    HashMap<String,String> hashMap = new HashMap<>();
+                    hashMap.put("name",name);
+                    hashMap.put("status","Hello");
+                    hashMap.put("image","default");
+                    hashMap.put("thumb_image","default");
+                    databaseReference.setValue(hashMap);
                     progressDialog.dismiss();
                     Intent intent = new Intent(signup.this,MainActivity.class);
                     Toast.makeText(signup.this,"sucess",Toast.LENGTH_LONG).show();

@@ -17,8 +17,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".start" />
-        <activity android:name=".signup"
-            android:parentActivityName=".start"></activity>
+        <activity
+            android:name=".signup"
+            android:parentActivityName=".start" />
+        <activity android:name=".Settings"></activity>
     </application>
 
 </manifest>
