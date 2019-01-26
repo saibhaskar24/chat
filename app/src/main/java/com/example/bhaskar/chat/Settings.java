@@ -1,8 +1,10 @@
 package com.example.bhaskar.chat;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -49,6 +51,14 @@ public class Settings extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        })
+        });
+    }
+    public  void  change_status(View view) {
+        Intent intent = new Intent(this, ChangeStatus.class);
+        startActivity(intent);
+    }
+
+    public  void  change_pic(View view) {
+
     }
 }

@@ -20,7 +20,8 @@
         <activity
             android:name=".signup"
             android:parentActivityName=".start" />
-        <activity android:name=".Settings"></activity>
+        <activity android:name=".Settings" />
+        <activity android:name=".ChangeStatus"></activity>
     </application>
 
 </manifest>
