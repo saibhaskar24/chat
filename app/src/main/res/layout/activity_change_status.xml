@@ -6,6 +6,10 @@
     android:layout_height="match_parent"
     tools:context=".ChangeStatus">
 
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
+
     <EditText
         android:id="@+id/status_update"
         android:layout_width="351dp"

@@ -1,9 +1,11 @@
 package com.example.bhaskar.chat;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -23,7 +25,8 @@ public class Settings extends AppCompatActivity {
 
     TextView name,status;
     Button change_pic,change_status;
-
+    ProgressDialog progressDialog;
+    Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +35,18 @@ public class Settings extends AppCompatActivity {
         status = (TextView) findViewById(R.id.status);
         change_pic = (Button) findViewById(R.id.change_pic);
         change_status = (Button) findViewById(R.id.change_status);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setTitle("Change Status");
+        setSupportActionBar(toolbar);
+        if(getSupportActionBar() != null) {
+            assert  getSupportActionBar() != null;
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Updating : ");
+        progressDialog.setMessage("please wait");
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
 
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUser.getUid());
@@ -45,6 +60,8 @@ public class Settings extends AppCompatActivity {
                 im_t = dataSnapshot.child("thumb_image").getValue().toString();
                 name.setText(n);
                 status.setText(s);
+                progressDialog.hide();
+                progressDialog.dismiss();
             }
 
             @Override
@@ -59,6 +76,10 @@ public class Settings extends AppCompatActivity {
     }
 
     public  void  change_pic(View view) {
+        /*
+        Intent gintent = new Intent();
+        startActivityForResult();
 
+        */
     }
 }

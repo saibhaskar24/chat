@@ -82,12 +82,18 @@ public class signup extends AppCompatActivity {
                     hashMap.put("status","Hello");
                     hashMap.put("image","default");
                     hashMap.put("thumb_image","default");
-                    databaseReference.setValue(hashMap);
-                    progressDialog.dismiss();
-                    Intent intent = new Intent(signup.this,MainActivity.class);
-                    Toast.makeText(signup.this,"sucess",Toast.LENGTH_LONG).show();
-                    startActivity(intent);
-                    finish();
+                    databaseReference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if(task.isSuccessful()) {
+                                progressDialog.dismiss();
+                                Intent intent = new Intent(signup.this,MainActivity.class);
+                                Toast.makeText(signup.this,"sucess",Toast.LENGTH_LONG).show();
+                                startActivity(intent);
+                                finish();
+                            }
+                        }
+                    });
                 }
                 else {
                     progressDialog.hide();
