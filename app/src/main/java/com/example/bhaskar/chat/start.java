@@ -18,5 +18,6 @@ public class start extends AppCompatActivity {
     public  void c(View view) {
         Intent intent = new Intent(this, signup.class);
         startActivity(intent);
+        finish();
     }
 }

@@ -97,7 +97,7 @@ public class signup extends AppCompatActivity {
                 }
                 else {
                     progressDialog.hide();
-                    Toast.makeText(signup.this, "Error", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(signup.this, " ERROR ", Toast.LENGTH_SHORT).show();
                 }
             }
         });
