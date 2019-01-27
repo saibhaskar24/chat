@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "614301066271-aagn03evgd5jl6056qs0hv5qab93srlp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.bhaskar.chat",
+            "certificate_hash": "42fcde70f805ecad26b426c4b896f6503e0851e5"
+          }
+        },
+        {
           "client_id": "614301066271-csh0i8icg3m6nu67fm1ovss89p54d8s6.apps.googleusercontent.com",
           "client_type": 3
         }

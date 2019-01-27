@@ -3,6 +3,7 @@ package com.example.bhaskar.chat;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.media.Image;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +15,8 @@ import android.widget.Gallery;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -21,6 +24,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 public class Settings extends AppCompatActivity {
 
@@ -32,6 +40,8 @@ public class Settings extends AppCompatActivity {
     Button change_pic,change_status;
     ProgressDialog progressDialog;
     Toolbar toolbar;
+    CropImageView cropImageView;
+    StorageReference storageReference;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +51,7 @@ public class Settings extends AppCompatActivity {
         change_pic = (Button) findViewById(R.id.change_pic);
         change_status = (Button) findViewById(R.id.change_status);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        cropImageView = (CropImageView) findViewById(R.id.cropImageView);
         setTitle("Change Status");
         setSupportActionBar(toolbar);
         if(getSupportActionBar() != null) {
@@ -52,7 +63,7 @@ public class Settings extends AppCompatActivity {
         progressDialog.setMessage("please wait");
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
-
+        storageReference = FirebaseStorage.getInstance().getReference();
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUser.getUid());
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -82,19 +93,46 @@ public class Settings extends AppCompatActivity {
 
     public  void  change_pic(View view) {
 
+
         Intent gintent = new Intent();
         gintent.setType("image/*");
         gintent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(gintent.createChooser(gintent,"Select image"), 1);
+
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == 1 && resultCode == RESULT_OK) {
-            String imageUri = data.getDataString();
+             Uri imageUri = data.getData();
 
-            Toast.makeText(this,imageUri,Toast.LENGTH_LONG).show();
+            CropImage.activity(imageUri).setAspectRatio(1,1)
+                    .start(this);
+            }
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                Uri resultUri = result.getUri();
+                StorageReference firepath = storageReference.child("profileImages").child(currentUser.getUid()+".jpg");
+                firepath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                        if(task.isSuccessful()) {
+                            Toast.makeText(Settings.this,"Image added ",Toast.LENGTH_LONG).show();
+                    }
+                    else {
+                            Toast.makeText(Settings.this,"Error occurred while adding ",Toast.LENGTH_LONG).show();
+                        }
+                }});
+                }
+                else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+            }
         }
+
+
     }
+
 }
