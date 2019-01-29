@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -115,12 +116,19 @@ public class Settings extends AppCompatActivity {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
                 Uri resultUri = result.getUri();
-                StorageReference firepath = storageReference.child("profileImages").child(currentUser.getUid()+".jpg");
+                final StorageReference firepath = storageReference.child("profileImages").child(currentUser.getUid()+".jpg");
                 firepath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                         if(task.isSuccessful()) {
-                            Toast.makeText(Settings.this,"Image added ",Toast.LENGTH_LONG).show();
+
+                            String url = task.getResult().getMetadata().getReference().getDownloadUrl().toString();
+                            databaseReference.child("image").setValue(url).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    Toast.makeText(Settings.this,"Image added ",Toast.LENGTH_LONG).show();
+                                }
+                            });
                     }
                     else {
                             Toast.makeText(Settings.this,"Error occurred while adding ",Toast.LENGTH_LONG).show();
