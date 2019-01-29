@@ -117,23 +117,25 @@ public class Settings extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 Uri resultUri = result.getUri();
                 final StorageReference firepath = storageReference.child("profileImages").child(currentUser.getUid()+".jpg");
-                firepath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                firepath.putFile(resultUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                        if(task.isSuccessful()) {
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        firepath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                final String url =  uri.toString();
+                                databaseReference.child("image").setValue(url).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Toast.makeText(Settings.this,"Image added to storage",Toast.LENGTH_LONG).show();
+                                    }
+                                });
+                            }
+                        });
 
-                            String url = task.getResult().getMetadata().getReference().getDownloadUrl().toString();
-                            databaseReference.child("image").setValue(url).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    Toast.makeText(Settings.this,"Image added ",Toast.LENGTH_LONG).show();
-                                }
-                            });
+
                     }
-                    else {
-                            Toast.makeText(Settings.this,"Error occurred while adding ",Toast.LENGTH_LONG).show();
-                        }
-                }});
+                });
                 }
                 else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
