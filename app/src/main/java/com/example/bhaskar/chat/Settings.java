@@ -28,15 +28,17 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Settings extends AppCompatActivity {
 
     DatabaseReference databaseReference ;
     FirebaseUser currentUser;
-    Image image;
-
+    CircleImageView image;
     TextView name,status;
     Button change_pic,change_status;
     ProgressDialog progressDialog;
@@ -52,6 +54,7 @@ public class Settings extends AppCompatActivity {
         change_pic = (Button) findViewById(R.id.change_pic);
         change_status = (Button) findViewById(R.id.change_status);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        image = (CircleImageView) findViewById(R.id.profile_image);
         cropImageView = (CropImageView) findViewById(R.id.cropImageView);
         setTitle("Change Status");
         setSupportActionBar(toolbar);
@@ -99,6 +102,19 @@ public class Settings extends AppCompatActivity {
         gintent.setType("image/*");
         gintent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(gintent.createChooser(gintent,"Select image"), 1);
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String url = dataSnapshot.child("image").getValue().toString();
+                Picasso.get().load(url).into(image);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(Settings.this,"Image not added", Toast.LENGTH_LONG).show();
+            }
+        });
 
     }
 
