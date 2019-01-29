@@ -17,6 +17,8 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Objects;
 
+import okhttp3.internal.Internal;
+
 public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
@@ -69,6 +71,10 @@ public class MainActivity extends AppCompatActivity {
         }
         else if(item.getItemId() == R.id.menu_settings) {
             Intent intent = new Intent(this,Settings.class);
+            startActivity(intent);
+        }
+        else  if(item.getItemId() == R.id.menu_allusers) {
+            Intent intent = new Intent(this,AllUsers.class);
             startActivity(intent);
         }
         return true;
