@@ -2,11 +2,12 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/singleuser"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/circleImageView"
+        android:id="@+id/singleuserprofile"
         android:layout_width="125dp"
         android:layout_height="90dp"
         android:layout_marginStart="8dp"
@@ -15,14 +16,14 @@
         android:layout_marginBottom="8dp"
         android:src="@drawable/profile"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/textView3"
+        app:layout_constraintEnd_toStartOf="@+id/singleusername"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/singleusername"
         android:layout_width="190dp"
         android:layout_height="25dp"
         android:layout_marginStart="104dp"
@@ -39,7 +40,7 @@
         app:layout_constraintVertical_bias="0.131" />
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/singleuserstatus"
         android:layout_width="226dp"
         android:layout_height="19dp"
         android:layout_marginStart="8dp"
@@ -52,7 +53,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.917"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView3"
+        app:layout_constraintTop_toTopOf="@+id/singleusername"
         app:layout_constraintVertical_bias="0.652" />
 
 </android.support.constraint.ConstraintLayout>
