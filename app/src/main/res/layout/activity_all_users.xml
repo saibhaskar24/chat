@@ -12,8 +12,8 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/allusers_list"
-        android:layout_width="395dp"
+        android:layout_width="400dp"
         android:layout_height="664dp"
-        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteX="3dp"
         tools:layout_editor_absoluteY="59dp" />
 </android.support.constraint.ConstraintLayout>
