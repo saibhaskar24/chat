@@ -2,6 +2,7 @@ package com.example.bhaskar.chat;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.media.Image;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -32,7 +33,13 @@ import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+
 import de.hdodenhof.circleimageview.CircleImageView;
+import id.zelory.compressor.Compressor;
 
 public class Settings extends AppCompatActivity {
 
@@ -56,7 +63,7 @@ public class Settings extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         image = (CircleImageView) findViewById(R.id.profile_image);
         cropImageView = (CropImageView) findViewById(R.id.cropImageView);
-        setTitle("Change Status");
+        setTitle("Settings");
         setSupportActionBar(toolbar);
         if(getSupportActionBar() != null) {
             assert  getSupportActionBar() != null;
@@ -76,8 +83,6 @@ public class Settings extends AppCompatActivity {
                 String n,s,im,im_t;
                 n = dataSnapshot.child("name").getValue().toString();
                 s = dataSnapshot.child("status").getValue().toString();
-                im = dataSnapshot.child("image").getValue().toString();
-                im_t = dataSnapshot.child("thumb_image").getValue().toString();
                 name.setText(n);
                 status.setText(s);
                 progressDialog.hide();
@@ -131,27 +136,59 @@ public class Settings extends AppCompatActivity {
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
-                Uri resultUri = result.getUri();
-                final StorageReference firepath = storageReference.child("profileImages").child(currentUser.getUid()+".jpg");
-                firepath.putFile(resultUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        firepath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                            @Override
-                            public void onSuccess(Uri uri) {
-                                final String url =  uri.toString();
-                                databaseReference.child("image").setValue(url).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        Toast.makeText(Settings.this,"Image added to storage",Toast.LENGTH_LONG).show();
-                                    }
-                                });
-                            }
-                        });
+                final Uri resultUri = result.getUri();
+                final File file = new File(resultUri.getPath());
+
+                try {
+                    Bitmap ImageBitmap = new Compressor(this)
+                            .setQuality(75)
+                            .compressToBitmap(file);
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    ImageBitmap.compress(Bitmap.CompressFormat.JPEG, 100,baos);
+                    byte[] bytes = baos.toByteArray();
+
+                    final StorageReference firepath = storageReference.child("profileImages").child(currentUser.getUid()+".jpg");
+                    final StorageReference thumb_fire = storageReference.child("profileImages").child("thumb").child(currentUser.getUid()+".jpg");
+                    UploadTask uploadTask = (UploadTask) thumb_fire.putBytes(bytes).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            thumb_fire.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    final  String turl = uri.toString();
+                                    databaseReference.child("thumb_image").setValue(turl).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            firepath.putFile(resultUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                                @Override
+                                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                                    firepath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                                        @Override
+                                                        public void onSuccess(Uri uri) {
+                                                            final String url =  uri.toString();
+                                                            databaseReference.child("image").setValue(url).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                @Override
+                                                                public void onSuccess(Void aVoid) {
+                                                                    Toast.makeText(Settings.this,"Image added to storage",Toast.LENGTH_LONG).show();
+                                                                }
+                                                            });
+                                                        }
+                                                    });
 
 
-                    }
-                });
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
                 }
                 else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
